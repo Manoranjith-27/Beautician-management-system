@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ragv</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
+    <style>
+        .moreBeauticians {
+            width: 90%;
+            display: block;
+            text-align: right;
+            clear: both;
+            color: black;
+            
+        }
+        .moreBeauticians a{
+            text-decoration: none;
+            color: black;
+        }
+
+        .booking a {
+            cursor: pointer;
+            color: black;
+            text-decoration: none;
+        }
+        .booking a div{
+            height: 100%;
+        }
+
+        .booking:hover a, .booking:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .suggestions-box {
+    display: none;
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    width: 250px;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+.suggestions-box div {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+.suggestions-box div:hover {
+    background: #f0f0f0;
+}
+#searchButton a{
+    color: white;
+    font-size: 15px;
+    text-decoration: none;
+}
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">Beauti</a>
+            <button class="mobile-menu-btn">☰</button>
+            <ul class="nav-links">
+                <li><a href="aboutus">About Us</a></li>
+                {% if 'user_id' in session %}
+                    <li><a href="beauticians">Beauticians</a></li>
+                    <li><a href="apply">Apply as Designer </a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Beauticians</a></li>
+                    <li><a href="{{ url_for('login') }}">Apply as Designer </a></li>
+                {% endif %}
+                {% if 'user_id' in session %}
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <section id="aboutUs">
+        <h3 class="aboutUs">About Us</h3>
+        <p>At Beauti, we believe that every bride and groom deserve to look and feel their best on their special day. Our platform connects talented beauticians with clients looking for expert beauty and styling services for Hindu, Muslim, and Christian weddings.We provide a seamless booking experience, giving skilled beauticians the opportunity to showcase their expertise while helping brides, grooms, and their families find the perfect professional to match their traditions and preferences.Whether it's a vibrant Hindu wedding, an elegant Christian ceremony, or a beautiful Nikah celebration, we ensure that every look is crafted with precision, tradition, and beauty in mind.Join us in creating unforgettable wedding moments with the perfect beauty experts!</p>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Beauti</h3>
+                <p>India's favorite wedding planning platform to help you plan your special day.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="/careers">Careers</a></li>
+                    <li><a href="/terms">Terms & Conditions</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Vendor Services</h4>
+                <ul>
+                    <li><a href="/vendor-signup">List Your Business</a></li>
+                    <li><a href="/vendor-login">Vendor Login</a></li>
+                    <li><a href="/vendor-help">Vendor Help Center</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="#" class="social-icon">Instagram</a>
+                    <a href="#" class="social-icon">Facebook</a>
+                    <a href="#" class="social-icon">Twitter</a>
+                    <a href="#" class="social-icon">YouTube</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Beauti. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+        document.getElementById('district_search').addEventListener('input', function() {
+            let filter = this.value.toLowerCase();
+            let dropdown = document.getElementById('district_dropdown');
+            dropdown.style.display = 'block';
+            let options = dropdown.getElementsByTagName('div');
+            
+            for (let option of options) {
+                if (option.innerText.toLowerCase().includes(filter)) {
+                    option.style.display = "block";
+                } else {
+                    option.style.display = "none";
+                }
+            }
+        });
+
+        document.querySelectorAll('#district_dropdown div').forEach(item => {
+            item.addEventListener('click', function() {
+                document.getElementById('district_search').value = this.innerText;
+                document.getElementById('district').value = this.dataset.value;
+                document.getElementById('district_dropdown').style.display = 'none';
+            });
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.searchable-select')) {
+                document.getElementById('district_dropdown').style.display = 'none';
+            }
+        });
+    </script>
+
+<script>
+    const districtSearch = document.getElementById('district_search');
+    const districtDropdown = document.getElementById('district_dropdown');
+    const districtInput = document.getElementById('district');
+  
+    districtSearch.addEventListener('focus', () => {
+      districtDropdown.style.display = 'block';
+    });
+  
+    districtSearch.addEventListener('blur', () => {
+      // delay to allow click on dropdown item to register
+      setTimeout(() => {
+          districtDropdown.style.display = 'none';
+      }, 200);
+    });
+  
+    districtSearch.addEventListener('input', () => {
+      const filter = districtSearch.value.toUpperCase();
+      const dropdownItems = districtDropdown.getElementsByTagName('div');
+  
+      for (let item of dropdownItems) {
+        const text = item.textContent.toUpperCase();
+        if (text.indexOf(filter) > -1) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      }
+    });
+  
+    districtDropdown.addEventListener('click', (event) => {
+      if (event.target.tagName === 'DIV') {
+        districtSearch.value = event.target.textContent;
+        districtInput.value = event.target.dataset.value;
+        districtDropdown.style.display = 'none';
+      }
+    });
+  </script>
+
+</body>
+</html>
